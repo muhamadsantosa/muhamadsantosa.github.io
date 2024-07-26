@@ -1,5 +1,5 @@
 /*
-  Template Name: Morex - Personal Portfolio HTML Template
+  Template Name: Benos - Personal Portfolio Tailwind CSS HTML Template
   Author Name: Hook theme
   Author URL: https://themeforest.net/user/hooktheme
   Version: 1.0.0
@@ -7,7 +7,33 @@
 
 "use strict";
 
+// Dark to light mode js
+const lightToDarkButton = document.getElementById("light__to--dark");
+lightToDarkButton?.addEventListener("click", function () {
+    if (localStorage.getItem("theme-color")) {
+      if (localStorage.getItem("theme-color") === "light") {
+        document.documentElement.classList.add("dark");
+        localStorage.setItem("theme-color", "dark");
+        lightToDarkButton?.classList.add("dark--version");
+      } else {
+        document.documentElement.classList.remove("dark");
+        localStorage.setItem("theme-color", "light");
+        lightToDarkButton?.classList?.remove("dark--version");
+      }
+    } else {
+      if (document.documentElement.classList.contains("dark")) {
+        document.documentElement.classList.remove("dark");
+        lightToDarkButton?.classList?.remove("dark--version");
+        localStorage.setItem("theme-color", "light");
+      } else {
+        document.documentElement.classList.add("dark");
+        localStorage.setItem("theme-color", "dark");
+        lightToDarkButton?.classList.add("dark--version");
+      }
+    }
+});
 
+// Preloader
 const preLoader = function () {
   let preloaderWrapper = document.getElementById("preloader");
   window.onload = () => {
@@ -87,7 +113,6 @@ function TopOffset(el) {
     scrollTop = window.pageYOffset || document.documentElement.scrollTop;
   return { top: rect.top + scrollTop };
 }
-
 // Header sticky activation
 const headerStickyWrapper = document.querySelector("header");
 const headerStickyTarget = document.querySelector(".header__sticky");
@@ -106,7 +131,7 @@ if (headerStickyTarget) {
   });
 }
 
-// Scroll up activation
+// Back to top
 const scrollTop = document.getElementById("scroll__top");
 if (scrollTop) {
   scrollTop.addEventListener("click", function () {
@@ -122,169 +147,7 @@ if (scrollTop) {
 }
 
 
-/*  ----- Dark to light mode js ----- */
-const lightToDarkButton = document.getElementById("light__to--dark");
-lightToDarkButton?.addEventListener("click", function () {
-    if (localStorage.getItem("theme-color")) {
-      if (localStorage.getItem("theme-color") === "light") {
-        document.documentElement.classList.add("dark");
-        localStorage.setItem("theme-color", "dark");
-        lightToDarkButton?.classList.add("dark--version");
-      } else {
-        document.documentElement.classList.remove("dark");
-        localStorage.setItem("theme-color", "light");
-        lightToDarkButton?.classList?.remove("dark--version");
-      }
-    } else {
-      if (document.documentElement.classList.contains("dark")) {
-        document.documentElement.classList.remove("dark");
-        lightToDarkButton?.classList?.remove("dark--version");
-        localStorage.setItem("theme-color", "light");
-      } else {
-        document.documentElement.classList.add("dark");
-        localStorage.setItem("theme-color", "dark");
-        lightToDarkButton?.classList.add("dark--version");
-      }
-    }
-});
-
-
-// Toggle navigation
-const toggleNavButton = document.querySelector(".toggle__navigation--button");
-const onBodyClick = handleBodyClick.bind(this);
-toggleNavButton?.addEventListener("click", (event) => {
-  event.preventDefault();
-  if(toggleNavButton.parentElement.classList.contains("menu--visible")){
-    toggleNavButton.parentElement.classList.remove("menu--visible");
-    document.body.removeEventListener("click", onBodyClick);
-  }else{
-    toggleNavButton.parentElement.classList.add("menu--visible");
-    document.body.addEventListener("click", onBodyClick);
-  }
-})
-function handleBodyClick(evt) {
-  const target = evt.target;
-  if (!target.closest(".toggle__navigation--button") && !target.closest(".toggle__navigation")) {
-    document.body.removeEventListener("click", onBodyClick);
-    if(toggleNavButton.parentElement.classList.contains("menu--visible")){
-      toggleNavButton.parentElement.classList.remove("menu--visible");
-    }
-  }
-} 
-
-
-/** -------- Isotope activation js ----------- **/
-
-const isotopeGrid = document.querySelector(".portfolio__grid");
-if(isotopeGrid){
-  imagesLoaded(isotopeGrid, function( instance ) {
-    // init Isotope
-    var iso = new Isotope(isotopeGrid, {
-      itemSelector: '.element-item',
-      percentPosition: true,
-      masonry: {
-        columnWidth: ".element-item"
-      }
-    });
-
-    // filter functions
-    var filterFns = {
-      // show if number is greater than 50
-      numberGreaterThan50: function( itemElem ) {
-        var number = itemElem.querySelector('.number').textContent;
-        return parseInt( number, 10 ) > 50;
-      },
-      // show if name ends with -ium
-      ium: function( itemElem ) {
-        var name = itemElem.querySelector('.name').textContent;
-        return name.match( /ium$/ );
-      }
-    };
-
-    // bind filter button click
-    var filtersElem = document.querySelector('.filters-button-group');
-    filtersElem.addEventListener( 'click', function( event ) {
-      // only work with buttons
-      if ( !matchesSelector( event.target, 'button' ) ) {
-        return;
-      }
-      var filterValue = event.target.getAttribute('data-filter');
-      // use matching filter function
-      filterValue = filterFns[ filterValue ] || filterValue;
-      iso.arrange({ filter: filterValue });
-    });
-
-    // change is-checked class on buttons
-    var buttonGroups = document.querySelectorAll('.button-group');
-    for ( var i=0, len = buttonGroups.length; i < len; i++ ) {
-      var buttonGroup = buttonGroups[i];
-      radioButtonGroup( buttonGroup );
-    }
-
-    function radioButtonGroup( buttonGroup ) {
-      buttonGroup.addEventListener( 'click', function( event ) {
-        // only work with buttons
-        if ( !matchesSelector( event.target, 'button' ) ) {
-          return;
-        }
-        buttonGroup.querySelector('.is-checked').classList.remove('is-checked');
-        event.target.classList.add('is-checked');
-      });
-    }
-  });
-  
-
-}
-
-
-// CounterUp Activation
-const wrapper = document.getElementById("funfactId");
-if (wrapper) {
-  const counters = wrapper.querySelectorAll(".js-counter");
-  const duration = 400;
-
-  let isCounted = false;
-  document.addEventListener("scroll", function () {
-    const wrapperPos = wrapper.offsetTop - window.innerHeight;
-    if (!isCounted && window.scrollY > wrapperPos) {
-      counters.forEach((counter) => {
-        const countTo = counter.dataset.count;
-
-        const countPerMs = countTo / duration;
-
-        let currentCount = 0;
-        const countInterval = setInterval(function () {
-          if (currentCount >= countTo) {
-            clearInterval(countInterval);
-          }
-          counter.textContent = Math.round(currentCount);
-          currentCount = currentCount + countPerMs;
-        }, 1);
-      });
-      isCounted = true;
-    }
-  });
-}
-
-// testimonial swiper activation
-var swiper = new Swiper(".testimonial__swiper--activation", {
-  slidesPerView: 1,
-  loop: false,
-  clickable: true,
-  spaceBetween: 30,
-  breakpoints: {
-    0: {
-      slidesPerView: 1,
-    },
-  },
-  pagination: {
-    el: ".swiper-pagination",
-    clickable: true,
-  },
-});
-
-
-/* Offcanvas Mobile Menu Function */
+/* Mobile Menu Function */
 const offcanvasHeader = function () {
   const offcanvasOpen = document.querySelector(
       ".offcanvas__header--menu__open--btn"
@@ -390,97 +253,161 @@ const offcanvasHeader = function () {
     });
   }
 };
+/* Mobile Menu Active */
 offcanvasHeader();
 
-// Category Submenu
-const categoryMobileMenu = function () {
-  const CategorySubMenu = document.querySelector(".category__mobile--menu");
-  if (CategorySubMenu) {
-    CategorySubMenu.querySelectorAll(".category__sub--menu").forEach(function (
-      ul
-    ) {
-      let catsubMenuToggle = document.createElement("button");
-      catsubMenuToggle.classList.add("category__sub--menu_toggle");
-      ul.parentNode.appendChild(catsubMenuToggle);
-    });
-  }
-  let categoryMenuWrapper = document.querySelector(
-    ".category__mobile--menu_ul"
-  );
-  if (categoryMenuWrapper) {
-    categoryMenuWrapper.addEventListener("click", function (e) {
-      let targetElement = e.target;
-      if (targetElement.classList.contains("category__sub--menu_toggle")) {
-        const parent = targetElement.parentElement;
-        if (parent.classList.contains("active")) {
-          targetElement.classList.remove("active");
-          parent.classList.remove("active");
-          parent
-            .querySelectorAll(".category__sub--menu")
-            .forEach(function (subMenu) {
-              subMenu.parentElement.classList.remove("active");
-              subMenu.nextElementSibling.classList.remove("active");
-              slideUp(subMenu);
-            });
-        } else {
-          targetElement.classList.add("active");
-          parent.classList.add("active");
-          slideDown(targetElement.previousElementSibling);
-          getSiblings(parent).forEach(function (item) {
-            item.classList.remove("active");
-            item
-              .querySelectorAll(".category__sub--menu")
-              .forEach(function (subMenu) {
-                subMenu.parentElement.classList.remove("active");
-                subMenu.nextElementSibling.classList.remove("active");
-                slideUp(subMenu);
-              });
-          });
-        }
+
+
+/** -------- Isotope & imagesLoaded  activation js ----------- **/
+
+const isotopeGrid = document.querySelector(".portfolio__grid");
+if(isotopeGrid){
+  imagesLoaded(isotopeGrid, function( instance ) {
+    // init Isotope
+    var iso = new Isotope(isotopeGrid, {
+      itemSelector: '.element-item',
+      percentPosition: true,
+      masonry: {
+        columnWidth: ".element-item"
       }
     });
-  }
-};
-categoryMobileMenu();
 
-// Newsletter popup
-const newsletterPopup = function () {
-  let newsletterWrapper = document.querySelector(".newsletter__popup"),
-    newsletterCloseButton = document.querySelector(
-      ".newsletter__popup--close__btn"
-    ),
-    dontShowPopup = document.querySelector("#newsletter__dont--show"),
-    popuDontShowMode = localStorage.getItem("newsletter__show");
+    // filter functions
+    var filterFns = {
+      // show if number is greater than 50
+      numberGreaterThan50: function( itemElem ) {
+        var number = itemElem.querySelector('.number').textContent;
+        return parseInt( number, 10 ) > 50;
+      },
+      // show if name ends with -ium
+      ium: function( itemElem ) {
+        var name = itemElem.querySelector('.name').textContent;
+        return name.match( /ium$/ );
+      }
+    };
 
-  if (newsletterWrapper && popuDontShowMode == null) {
-    window.addEventListener("load", (event) => {
-      setTimeout(function () {
-        document.body.classList.add("overlay__active");
-        newsletterWrapper.classList.add("newsletter__show");
-
-        document.addEventListener("click", function (event) {
-          if (!event.target.closest(".newsletter__popup--inner")) {
-            document.body.classList.remove("overlay__active");
-            newsletterWrapper.classList.remove("newsletter__show");
-          }
-        });
-
-        newsletterCloseButton.addEventListener("click", function () {
-          document.body.classList.remove("overlay__active");
-          newsletterWrapper.classList.remove("newsletter__show");
-        });
-
-        dontShowPopup.addEventListener("click", function () {
-          if (dontShowPopup.checked) {
-            localStorage.setItem("newsletter__show", true);
-          } else {
-            localStorage.removeItem("newsletter__show");
-          }
-        });
-      }, 3000);
+    // bind filter button click
+    var filtersElem = document.querySelector('.filters-button-group');
+    filtersElem.addEventListener( 'click', function( event ) {
+      // only work with buttons
+      if ( !matchesSelector( event.target, 'button' ) ) {
+        return;
+      }
+      var filterValue = event.target.getAttribute('data-filter');
+      // use matching filter function
+      filterValue = filterFns[ filterValue ] || filterValue;
+      iso.arrange({ filter: filterValue });
     });
+
+    // change is-checked class on buttons
+    var buttonGroups = document.querySelectorAll('.button-group');
+    for ( var i=0, len = buttonGroups.length; i < len; i++ ) {
+      var buttonGroup = buttonGroups[i];
+      radioButtonGroup( buttonGroup );
+    }
+
+    function radioButtonGroup( buttonGroup ) {
+      buttonGroup.addEventListener( 'click', function( event ) {
+        // only work with buttons
+        if ( !matchesSelector( event.target, 'button' ) ) {
+          return;
+        }
+        buttonGroup.querySelector('.is-checked').classList.remove('is-checked');
+        event.target.classList.add('is-checked');
+      });
+    }
+  });
+  
+
+}
+// Portfolio modal popup
+const modalPopupList = document.querySelectorAll(".popup-modal--open");
+const modalPopupClose = document.querySelectorAll(".modal__popup--close");
+
+if(modalPopupList && modalPopupClose){
+  modalPopupList.forEach(function(modal){
+    modal.addEventListener("click", function(event){
+      event.preventDefault();
+      if(this.nextElementSibling.classList.contains("active") === false){
+        this.nextElementSibling.classList.add("active");
+        document.body.classList.add("overflow-y-hidden");
+      }
+      let popupOverlay = this.nextElementSibling.querySelector(".modal_popup_overlay")
+      popupOverlay.addEventListener("click", function(event){
+        this.parentElement.classList.remove("active");
+      })
+    })
+  });
+  modalPopupClose.forEach(function(modalClose){
+    modalClose.addEventListener("click", function(event){
+      event.preventDefault();
+      if(this.parentElement.parentElement.parentElement.classList.contains("active")){
+        this.parentElement.parentElement.parentElement.classList.remove("active");
+        document.body.classList.remove("overflow-y-hidden");
+      }
+    })
+  });  
+}
+
+// Testimonial slider 
+const swiper = new Swiper('.testimonial__slider', {
+  loop: true,
+  pagination: {
+    el: '.swiper-pagination',
+    clickable: true,
   }
-};
-newsletterPopup();
+});
+
+// Toggle navigation
+const toggleNavButton = document.querySelector(".toggle__navigation--button");
+const onBodyClick = handleBodyClick.bind(this);
+toggleNavButton?.addEventListener("click", (event) => {
+  event.preventDefault();
+  if(toggleNavButton.parentElement.classList.contains("menu--visible")){
+    toggleNavButton.parentElement.classList.remove("menu--visible");
+    document.body.removeEventListener("click", onBodyClick);
+  }else{
+    toggleNavButton.parentElement.classList.add("menu--visible");
+    document.body.addEventListener("click", onBodyClick);
+  }
+})
+function handleBodyClick(evt) {
+  const target = evt.target;
+  if (!target.closest(".toggle__navigation--button") && !target.closest(".toggle__navigation")) {
+    document.body.removeEventListener("click", onBodyClick);
+    if(toggleNavButton.parentElement.classList.contains("menu--visible")){
+      toggleNavButton.parentElement.classList.remove("menu--visible");
+    }
+  }
+} 
 
 
+
+// CounterUp Activation
+const wrapper = document.getElementById("funfactId");
+if (wrapper) {
+  const counters = wrapper.querySelectorAll(".js-counter");
+  const duration = 400;
+
+  let isCounted = false;
+  document.addEventListener("scroll", function () {
+    const wrapperPos = wrapper.offsetTop - window.innerHeight;
+    if (!isCounted && window.scrollY > wrapperPos) {
+      counters.forEach((counter) => {
+        const countTo = counter.dataset.count;
+
+        const countPerMs = countTo / duration;
+
+        let currentCount = 0;
+        const countInterval = setInterval(function () {
+          if (currentCount >= countTo) {
+            clearInterval(countInterval);
+          }
+          counter.textContent = Math.round(currentCount);
+          currentCount = currentCount + countPerMs;
+        }, 1);
+      });
+      isCounted = true;
+    }
+  });
+}
